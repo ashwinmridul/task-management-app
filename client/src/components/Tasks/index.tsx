@@ -97,6 +97,17 @@ const Tasks: FC<EmptyProps> = React.memo(() => {
     setTasks([...tasks, newTask]);
   }, [tasks]);
 
+  const onUpdate = useCallback((task: TaskType, status: StatusTypes) => {
+    setTasks(tasks.map(t => {
+      if (t.id === task.id) return {...t, status};
+      return t;
+    }));
+  }, [tasks]);
+
+  const onDelete = useCallback((task: TaskType) => {
+    setTasks(tasks.filter(t => t.id !== task.id));
+  }, [tasks]);
+
   return (
     <>
       <div style={{marginTop: 64}}>{loading ? <LinearProgress /> : <div className='loader-placeholder' />}</div>
@@ -113,7 +124,7 @@ const Tasks: FC<EmptyProps> = React.memo(() => {
         </div>
         </div>}
         {filteredTasks.length ? <Grid container className='grid' spacing={2} style={{marginTop: 0}}>
-          {filteredTasks.map((task: TaskType) => <Task key={task.id} task={task} />)}
+          {filteredTasks.map((task: TaskType) => <Task key={task.id} task={task} onUpdate={onUpdate} onDelete={onDelete} />)}
         </Grid> : <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 300}}>
           <Typography color="text.secondary">No tasks to show</Typography>
           </div>}

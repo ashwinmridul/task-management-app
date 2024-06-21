@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useContext, useState } from "react";
+import React, { FC, useCallback, useContext } from "react";
 import { Box, Card, CardActions, CardContent, Chip, Grid, IconButton, MenuItem, Select, SelectChangeEvent, Tooltip, Typography } from "@mui/material";
 import { API_URL, TASK_STATUS } from "../../constants";
 import { CalendarMonth, Delete } from "@mui/icons-material";
@@ -12,10 +12,7 @@ import { AlertContext } from "../../services/AlertService";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import { LoaderContext } from "../../services/LoaderService";
 
-const Task: FC<TaskProps> = React.memo(({task}) => {
-    const [status, setStatus] = useState(task.status);
-    const [deleted, setDeleted] = useState(false);
-    
+const Task: FC<TaskProps> = React.memo(({task, onUpdate, onDelete}) => {    
     const { token, logout } = useContext(AuthContext);
     const { dispatchAlert } = useContext(AlertContext);
     const { dispatchLoader } = useContext(LoaderContext);
@@ -25,27 +22,25 @@ const Task: FC<TaskProps> = React.memo(({task}) => {
         dispatchLoader(true);
         try {
             const response = await axios.put(`${API_URL}/tasks/${task.id}`, {status: e.target.value}, {headers: {token}});
-            setStatus(e.target.value as unknown as StatusTypes);
+            onUpdate(task, e.target.value as unknown as StatusTypes);
             dispatchAlert({severity: 'success', message: response.data.message});
         } catch  (error: any) {
             errorHandler(error, navigate, logout, dispatchAlert);
         }
         dispatchLoader(false);
-    }, [dispatchAlert, logout, navigate, task.id, token, dispatchLoader]);
+    }, [dispatchAlert, logout, navigate, token, dispatchLoader, onUpdate, task]);
 
-    const onDelete = useCallback(async () => {
+    const onRemove = useCallback(async () => {
         dispatchLoader(true);
         try {
             const response = await axios.delete(`${API_URL}/tasks/${task.id}`, {headers: {token}});
-            setDeleted(true);
+            onDelete(task);
             dispatchAlert({severity: 'success', message: response.data.message});
         } catch(error: any) {
             errorHandler(error, navigate, logout, dispatchAlert);
         }
         dispatchLoader(false);
-    }, [dispatchAlert, dispatchLoader, logout, navigate, task.id, token]);
-
-    if (deleted) return null;
+    }, [dispatchAlert, dispatchLoader, logout, navigate, token, onDelete, task]);
 
     return (
         <Grid item xs={12} sm={6} md={4} lg={3} xl={2} display="flex" flexGrow="1">
@@ -58,7 +53,7 @@ const Task: FC<TaskProps> = React.memo(({task}) => {
                     <Typography sx={{ fontSize: 14 }} style={{ marginBottom: 10, marginLeft: 10, display: 'flex', alignItems: 'flex-end' }} color="text.secondary" gutterBottom><CalendarMonth />: {format(new Date(task.due_date), 'MMM dd, yyyy')}</Typography>
                     <Box style={{display: 'flex', justifyContent: 'space-between'}}>
                         <Select
-                            value={status as unknown as string}
+                            value={task.status}
                             inputProps={{ 'aria-label': 'Filter' }}
                             sx={{'& .MuiSelect-select': {padding: 0}, '& .MuiChip-root': {marginTop: '0 !important'}}}
                             style={{borderRadius: 16}}
@@ -70,7 +65,7 @@ const Task: FC<TaskProps> = React.memo(({task}) => {
                                     style={{ backgroundColor: color }}/>
                             </MenuItem>)}
                         </Select>
-                        <Tooltip title="Delete"><IconButton size="small" onClick={onDelete}><Delete /></IconButton></Tooltip>
+                        <Tooltip title="Delete"><IconButton size="small" onClick={onRemove}><Delete /></IconButton></Tooltip>
                     </Box>
                 </CardActions>
             </Card>
