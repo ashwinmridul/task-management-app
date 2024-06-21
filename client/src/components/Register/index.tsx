@@ -16,7 +16,9 @@ const Register: FC<EmptyProps> = React.memo(() => {
   const [confirmPassword, setConfirmPassword]: [string, Dispatch<SetStateAction<string>>] = useState('');
   const theme: Theme = useTheme();
   const headerColor = useMemo(() => theme.palette.grey[800], [theme.palette.grey]);
+
   const navigate: NavigateFunction = useNavigate();
+  
   const {dispatchAlert} = useContext(AlertContext);
   const { register } = useContext(AuthContext);
 

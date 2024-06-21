@@ -19,10 +19,12 @@ import axios, { AxiosError } from 'axios';
 import { errorHandler } from '../../utils';
 import { useNavigate } from 'react-router-dom';
 import { AlertContext } from '../../services/AlertService';
+import { LoaderContext } from '../../services/LoaderService';
 
 const AddTaskDialog: React.FC<AddTaskProps> = ({onAdd, handleClose, open}) => {
   const { token, logout } = React.useContext(AuthContext);
   const { dispatchAlert } = React.useContext(AlertContext);
+  const { dispatchLoader } = React.useContext(LoaderContext);
   const navigate = useNavigate();
 
   return (
@@ -36,6 +38,7 @@ const AddTaskDialog: React.FC<AddTaskProps> = ({onAdd, handleClose, open}) => {
             event.preventDefault();
             const formData = new FormData(event.currentTarget);
             const formJson = Object.fromEntries((formData as any).entries());
+            dispatchLoader(true);
             try {
               const response = await axios.post(`${API_URL}/tasks`, {...formJson, status: StatusTypes.todo}, {headers: {token}});
               onAdd(response.data.task);
@@ -43,6 +46,7 @@ const AddTaskDialog: React.FC<AddTaskProps> = ({onAdd, handleClose, open}) => {
             } catch(err) {
               errorHandler(err as AxiosError, navigate, logout, dispatchAlert);
             }
+            dispatchLoader(false);
             
             handleClose();
           },
@@ -62,6 +66,10 @@ const AddTaskDialog: React.FC<AddTaskProps> = ({onAdd, handleClose, open}) => {
             type="text"
             fullWidth
             variant="standard"
+            inputProps={{
+              autoComplete: 'off'
+            }}
+            
           />
           <TextField
             required
@@ -73,10 +81,13 @@ const AddTaskDialog: React.FC<AddTaskProps> = ({onAdd, handleClose, open}) => {
             fullWidth
             variant="standard"
             style={{marginBottom: 15}}
+            inputProps={{
+              autoComplete: 'off'
+            }}
           />
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={['DatePicker']}>
-              <DatePicker name='dueDate' sx={{ width: "100%" }} label="Due Date" shouldDisableDate={(date) => date < dayjs()} />
+              <DatePicker name='dueDate' sx={{ width: "100%" }} label="Due Date" shouldDisableDate={(date) => date < dayjs()} format='YYYY-MM-DD' />
             </DemoContainer>
           </LocalizationProvider>
         </DialogContent>

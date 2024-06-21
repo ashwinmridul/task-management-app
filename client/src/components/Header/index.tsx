@@ -1,24 +1,28 @@
 import { AppBar, IconButton, Menu, MenuItem, Theme, Toolbar, Typography, useMediaQuery, useTheme } from "@mui/material";
-import { AccountCircle, ListAlt, Person, List, Logout } from '@mui/icons-material';
-import React, { useState, MouseEvent, useContext } from "react";
+import { AccountCircle, ListAlt, Logout } from '@mui/icons-material';
+import React, { useState, MouseEvent, useContext, useCallback } from "react";
 import "./styles.css";
 import { AuthContext } from "../../services/AuthService";
 
 const Header = React.memo(() => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const [openMenu, setOpenMenu] = useState<boolean>(false);
     const { token, logout, user } = useContext(AuthContext);
     const isAuthenticated = Boolean(token);
 
     const theme: Theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'), {defaultMatches: true});
     
-    const handleMenu = (event: MouseEvent<HTMLElement>) => {
+    const handleMenu = useCallback((event: MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
-    };
+        setOpenMenu(true);
+    }, []);
 
-    const handleClose = () => {
+    const handleClose = useCallback(() => {
         setAnchorEl(null);
-    };
+        setOpenMenu(false);
+    }, []);
+
     return <AppBar position="fixed">
         <Toolbar>
             <Typography variant="h6" component="div" className="header-text"><ListAlt />&nbsp;Tasks</Typography>
@@ -47,11 +51,9 @@ const Header = React.memo(() => {
                         vertical: 'top',
                         horizontal: 'right',
                     }}
-                    open={Boolean(anchorEl)}
+                    open={openMenu}
                     onClose={handleClose}
                 >
-                    <MenuItem onClick={handleClose}><Person />&nbsp;Profile</MenuItem>
-                    <MenuItem onClick={handleClose}><List />&nbsp;My Tasks</MenuItem>
                     <MenuItem onClick={logout}><Logout />&nbsp;Logout</MenuItem>
                 </Menu>
             </div>

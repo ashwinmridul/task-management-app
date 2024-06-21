@@ -7,9 +7,16 @@ export interface UserType {
 }
 
 export enum StatusTypes {
+    all = 'all',
     todo = 'todo',
     inProgress = 'inProgress',
     done = 'done'
+}
+
+export enum SortTypes {
+    none = 'None',
+    title = 'Title',
+    dueDate = 'Due Date'
 }
 
 export interface TaskType {
@@ -17,7 +24,7 @@ export interface TaskType {
     title: string;
     description: string;
     status: StatusTypes;
-    dueDate: string;
+    due_date: string;
 }
 
 export interface EmptyProps {
@@ -40,6 +47,11 @@ export interface AuthContextType {
     login: (email: string, password: string) => Promise<UserType>;
     register: (name: string, email: string, password: string) => Promise<UserType>;
     logout: () => void;
+}
+
+export interface LoaderContextType {
+    loading: boolean;
+    dispatchLoader: (value: boolean) => void;
 }
 
 export interface APIResponse {

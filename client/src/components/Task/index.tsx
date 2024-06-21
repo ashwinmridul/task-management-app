@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useContext, useState } from "react";
-import { Card, CardActions, CardContent, Chip, Grid, IconButton, MenuItem, Select, SelectChangeEvent, Tooltip, Typography } from "@mui/material";
+import { Box, Card, CardActions, CardContent, Chip, Grid, IconButton, MenuItem, Select, SelectChangeEvent, Tooltip, Typography } from "@mui/material";
 import { API_URL, TASK_STATUS } from "../../constants";
-import { Delete } from "@mui/icons-material";
+import { CalendarMonth, Delete } from "@mui/icons-material";
 import { format } from "date-fns";
 import { TaskProps } from "./types";
 import { StatusTypes } from "../../types";
@@ -10,6 +10,7 @@ import { AuthContext } from "../../services/AuthService";
 import { errorHandler } from "../../utils";
 import { AlertContext } from "../../services/AlertService";
 import { NavigateFunction, useNavigate } from "react-router-dom";
+import { LoaderContext } from "../../services/LoaderService";
 
 const Task: FC<TaskProps> = React.memo(({task}) => {
     const [status, setStatus] = useState(task.status);
@@ -17,9 +18,11 @@ const Task: FC<TaskProps> = React.memo(({task}) => {
     
     const { token, logout } = useContext(AuthContext);
     const { dispatchAlert } = useContext(AlertContext);
+    const { dispatchLoader } = useContext(LoaderContext);
     const navigate: NavigateFunction = useNavigate();
 
     const onChange = useCallback(async (e: SelectChangeEvent) => {
+        dispatchLoader(true);
         try {
             const response = await axios.put(`${API_URL}/tasks/${task.id}`, {status: e.target.value}, {headers: {token}});
             setStatus(e.target.value as unknown as StatusTypes);
@@ -27,9 +30,11 @@ const Task: FC<TaskProps> = React.memo(({task}) => {
         } catch  (error: any) {
             errorHandler(error, navigate, logout, dispatchAlert);
         }
-    }, [dispatchAlert, logout, navigate, task.id, token]);
+        dispatchLoader(false);
+    }, [dispatchAlert, logout, navigate, task.id, token, dispatchLoader]);
 
     const onDelete = useCallback(async () => {
+        dispatchLoader(true);
         try {
             const response = await axios.delete(`${API_URL}/tasks/${task.id}`, {headers: {token}});
             setDeleted(true);
@@ -37,7 +42,8 @@ const Task: FC<TaskProps> = React.memo(({task}) => {
         } catch(error: any) {
             errorHandler(error, navigate, logout, dispatchAlert);
         }
-    }, []);
+        dispatchLoader(false);
+    }, [dispatchAlert, dispatchLoader, logout, navigate, task.id, token]);
 
     if (deleted) return null;
 
@@ -47,23 +53,25 @@ const Task: FC<TaskProps> = React.memo(({task}) => {
                 <CardContent>
                     <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>{task.title}</Typography>
                     <Typography variant="body2">{task.description}</Typography>
-                    <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>Due Date: {format(task.dueDate, 'MMM d, yyyy')}</Typography>
                 </CardContent>
-                <CardActions style={{display: 'flex', justifyContent: 'space-between'}}>
-                    <Select
-                        value={status as unknown as string}
-                        inputProps={{ 'aria-label': 'Filter' }}
-                        sx={{'& .MuiSelect-select': {padding: 0}, '& .MuiChip-root': {marginTop: '0 !important'}}}
-                        style={{borderRadius: 16}}
-                        onChange={onChange}
-                        >
-                        {Object.entries(TASK_STATUS).map(([key, {color, label}]) => <MenuItem key={key} value={key}>
-                            <Chip label={label}
-                                color="primary"
-                                style={{ backgroundColor: color }}/>
-                        </MenuItem>)}
-                    </Select>
-                    <Tooltip title="Delete"><IconButton size="small" onClick={onDelete}><Delete /></IconButton></Tooltip>
+                <CardActions style={{display: 'flex', flexDirection: 'column', alignItems: 'stretch'}}>
+                    <Typography sx={{ fontSize: 14 }} style={{ marginBottom: 10, marginLeft: 10, display: 'flex', alignItems: 'flex-end' }} color="text.secondary" gutterBottom><CalendarMonth />: {format(new Date(task.due_date), 'MMM dd, yyyy')}</Typography>
+                    <Box style={{display: 'flex', justifyContent: 'space-between'}}>
+                        <Select
+                            value={status as unknown as string}
+                            inputProps={{ 'aria-label': 'Filter' }}
+                            sx={{'& .MuiSelect-select': {padding: 0}, '& .MuiChip-root': {marginTop: '0 !important'}}}
+                            style={{borderRadius: 16}}
+                            onChange={onChange}
+                            >
+                            {Object.entries(TASK_STATUS).map(([key, {color, label}]) => <MenuItem key={key} value={key}>
+                                <Chip label={label}
+                                    color="primary"
+                                    style={{ backgroundColor: color }}/>
+                            </MenuItem>)}
+                        </Select>
+                        <Tooltip title="Delete"><IconButton size="small" onClick={onDelete}><Delete /></IconButton></Tooltip>
+                    </Box>
                 </CardActions>
             </Card>
         </Grid>

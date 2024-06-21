@@ -1,14 +1,13 @@
 import { TextField, InputAdornment, IconButton } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
-import React, { useState } from 'react';
+import React, { FC, useCallback } from 'react';
+import { SearchBarProps } from './types';
 
-const SearchBar = React.memo(() => {
-  const [searchValue, setSearchValue] = useState('');
-
-  const handleClear = () => {
+const SearchBar: FC<SearchBarProps> = React.memo(({searchValue, setSearchValue}) => {
+  const handleClear = useCallback(() => {
     setSearchValue('');
-  };
+  }, [setSearchValue]);
 
   return (
     <TextField

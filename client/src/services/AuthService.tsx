@@ -6,8 +6,11 @@ import { API_URL } from "../constants";
 const AuthContext = createContext({} as AuthContextType);
 
 const AuthProvider: FC<EmptyProps> = React.memo(({children}) => {
-    const [token, setToken] = useState<string | null>(null);
-    const [user, setUser] = useState<UserType>({} as UserType);
+    const userInfo = localStorage.getItem('user');
+    const parsedUserInfo = userInfo ? JSON.parse(userInfo) : {};
+    
+    const [token, setToken] = useState<string | null>(parsedUserInfo.token || null);
+    const [user, setUser] = useState<UserType>(parsedUserInfo as UserType);
 
     const loginOrRegister = useCallback(async (email: string, password: string, path: string, name?: string): Promise<UserType> => {
         try{

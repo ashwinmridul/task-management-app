@@ -9,6 +9,7 @@ This is a full-stack task management application built using React, Node.js, and
 * The application uses a simple filtering mechanism to filter tasks by status.
 * The application uses a text search which filters the tasks' title matching with search text. There is no highlighting done in the assignment.
 * The applications uses a sort by title or due date mechanism. Sorting will be done only in ascending order in the assignment.
+* Since there is no pagination feature, I have implemented searching, sorting, filtering on client side to avoid overwhelming the server for these operations.
 
 # Node versions
 
@@ -21,8 +22,8 @@ To set up and run the application, follow these steps:
 
 * Clone the repository using git clone https://github.com/ashwinmridul/task-management-app.git
 * Install the dependencies using `npm install` in both the client and server directories
-* PostgreSQL is hosted on a free cloud service.
-* Start the Node.js server using `npm start` in the `server` directory
+* PostgreSQL is hosted on a free cloud service(aiven). So, no need to setup locally.
+* Start the Node.js server using `DEBUG=server:* npm start` in the `server` directory
 * Start the React application using `npm start` in the `client` directory
 * Open the application in a web browser using http://localhost:3000
 
@@ -39,7 +40,7 @@ The application uses a PostgreSQL database to store task data. The database has 
 It also has a table called users to store user information, which has the following fields:
 
 * `name`: String
-* `email`: String
+* `email`: unique String
 * `password`: String
 
 # API Endpoints
@@ -47,8 +48,7 @@ It also has a table called users to store user information, which has the follow
 The application provides the following API endpoints:
 
 * `POST /tasks`: Create a new task
-* `GET /tasks`: Retrieve a list of tasks
-* `GET /tasks/:id`: Retrieve a single task by ID
+* `GET /tasks`: Retrieve list of tasks
 * `PUT /tasks/:id`: Update a task
 * `DELETE /tasks/:id`: Delete a task
 

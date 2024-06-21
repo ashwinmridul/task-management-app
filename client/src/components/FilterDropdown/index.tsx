@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
+import React, { FC } from 'react';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Chip from '@mui/material/Chip';
 import { FormControl, InputLabel } from '@mui/material';
 import { TASK_STATUS } from '../../constants';
+import { FilterDropdownProps } from './types';
+import { StatusTypes } from '../../types';
 
-const FilterDropdown = React.memo(() => {
-  const [filter, setFilter] = useState('all');
-
+const FilterDropdown: FC<FilterDropdownProps> = React.memo(({filter, setFilter}) => {
   const handleChange = (event: SelectChangeEvent) => {
-    setFilter(event.target.value);
+    setFilter(event.target.value as StatusTypes);
   };
 
   return (
@@ -25,7 +25,7 @@ const FilterDropdown = React.memo(() => {
         label='Filter by:'
         defaultValue='all'
         >
-        <MenuItem value="all">
+        <MenuItem value={StatusTypes.all}>
             <span>All status</span>
         </MenuItem>
         {Object.entries(TASK_STATUS).map(([key, {color, label}]) => (

@@ -2,7 +2,7 @@ import React, { Dispatch, FC, FormEvent, SetStateAction, useCallback, useContext
 import { AuthContext } from '../../services/AuthService';
 import { NavLink, NavigateFunction, useNavigate } from 'react-router-dom';
 import { EmptyProps } from '../../types';
-import { Box, Button, Link, TextField, Theme, Typography/*, useMediaQuery*/ } from '@mui/material';
+import { Box, Button, Link, TextField, Theme, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import './styles.css';
 import { AlertContext } from '../../services/AlertService';
@@ -13,7 +13,6 @@ const Login: FC<EmptyProps> = React.memo(() => {
   const [password, setPassword]: [string, Dispatch<SetStateAction<string>>] = useState('');
   const theme: Theme = useTheme();
   const headerColor = useMemo(() => theme.palette.grey[800], [theme.palette.grey]);
-//   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'), {defaultMatches: true});
 
   const navigate: NavigateFunction = useNavigate();
   const {dispatchAlert} = useContext(AlertContext);
@@ -58,6 +57,7 @@ const Login: FC<EmptyProps> = React.memo(() => {
                     variant="standard"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    fullWidth
                 />
                 <br />
                 <TextField
@@ -68,13 +68,13 @@ const Login: FC<EmptyProps> = React.memo(() => {
                     variant="standard"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    fullWidth
                 />
                 <br />
                 <Button type="submit" variant='contained'>Login</Button>
                 <br />
                 <br />
                 <span className='register'><PersonAddAlt />&nbsp;New user?&nbsp;<Link to="/register" underline="hover" component={NavLink}>Signup</Link></span>
-                {/* <span>Small screens: {isSmallScreen.toString()}</span> */}
             </div>
         </Box>
     </div>

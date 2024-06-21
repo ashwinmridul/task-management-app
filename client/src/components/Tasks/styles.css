@@ -1,7 +1,7 @@
 .task-container {
-    margin-top: 68px;
+    margin-top: 10px;
     padding: 0 10px;
-    .loader-placeholder {
-        height: 4px;
-    }
+}
+.loader-placeholder {
+    height: 4px;
 }
