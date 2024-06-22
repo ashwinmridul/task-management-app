@@ -91,7 +91,8 @@ const Tasks: FC<EmptyProps> = React.memo(() => {
   useEffect((): void => {
     // Fetch data from the Express server
     getTasks();
-  }, [getTasks]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const addTask = useCallback((newTask: TaskType): void => {
     setTasks([...tasks, newTask]);

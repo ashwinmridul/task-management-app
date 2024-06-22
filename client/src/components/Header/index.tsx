@@ -25,7 +25,7 @@ const Header = React.memo(() => {
 
     return <AppBar position="fixed">
         <Toolbar>
-            <Typography variant="h6" component="div" className="header-text"><ListAlt />&nbsp;Tasks</Typography>
+            <Typography variant="h6" component="div" className="header-text"><ListAlt />&nbsp;Tasks{isSmallScreen ? '' : ' Management'}</Typography>
             {isAuthenticated ? (
             <div className="user-info">
                 <span>{isSmallScreen ? '' : 'Welcome, '}{user.name}</span>

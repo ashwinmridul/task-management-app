@@ -1,14 +1,7 @@
 const client = require('../utils/dbConnector');
 
 class User {
-    constructor() {
-        client.query("CREATE TABLE IF NOT EXISTS Users (ID SERIAL PRIMARY KEY, name VARCHAR(50) NOT NULL, email VARCHAR(100) UNIQUE NOT NULL, password VARCHAR(255) NOT NULL, creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP)", (err) => {
-            if (err) {
-                throw err;
-            }
-            console.log("Users table created successfully");
-        });
-    }
+    constructor() {}
 
     getUser(email, cb) {
         client.query("SELECT * FROM Users WHERE email = $1", [email], (err, result) => {

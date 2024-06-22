@@ -1,14 +1,7 @@
 const client = require('../utils/dbConnector');
 
 class Task {
-    constructor() {
-        client.query("CREATE TABLE IF NOT EXISTS tasks (id SERIAL PRIMARY KEY, user_id INTEGER NOT NULL, title VARCHAR(100) NOT NULL, description TEXT, status TEXT, due_date DATE, creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (user_id) REFERENCES Users(id))", (err) => {
-            if (err) {
-                throw err;
-            }
-            console.log("Tasks table created successfully");
-        });
-    }
+    constructor() {}
 
     getTasks(userId, cb) {
         client.query("SELECT * FROM Tasks WHERE user_id = $1", [userId], (err, result) => {

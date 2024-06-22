@@ -47,6 +47,8 @@ It also has a table called users to store user information, which has the follow
 
 The application provides the following API endpoints:
 
+* `POST /register`: User registration
+* `POST /login`: User authentication
 * `POST /tasks`: Create a new task
 * `GET /tasks`: Retrieve list of tasks
 * `PUT /tasks/:id`: Update a task
@@ -54,7 +56,9 @@ The application provides the following API endpoints:
 
 # Testing
 
-Unit tests are written for critical parts of the application, including API endpoints and data validation. The tests are written using Jest and Enzyme.
+Unit tests are written for critical parts of the application, including API endpoints and data validation. The tests are written using Jest.
+
+* Run the test cases by running `npm test` in the `server` directory.
 
 # Security
 

@@ -50,7 +50,7 @@ const Task: FC<TaskProps> = React.memo(({task, onUpdate, onDelete}) => {
                     <Typography variant="body2">{task.description}</Typography>
                 </CardContent>
                 <CardActions style={{display: 'flex', flexDirection: 'column', alignItems: 'stretch'}}>
-                    <Typography sx={{ fontSize: 14 }} style={{ marginBottom: 10, marginLeft: 10, display: 'flex', alignItems: 'flex-end' }} color="text.secondary" gutterBottom><CalendarMonth />: {format(new Date(task.due_date), 'MMM dd, yyyy')}</Typography>
+                    <Typography sx={{ fontSize: 14 }} style={{ marginBottom: 10, marginLeft: 10, display: 'flex', alignItems: 'flex-end' }} color="text.secondary" gutterBottom><CalendarMonth />&nbsp;{format(new Date(task.due_date), 'MMM dd, yyyy')}</Typography>
                     <Box style={{display: 'flex', justifyContent: 'space-between'}}>
                         <Select
                             value={task.status}
