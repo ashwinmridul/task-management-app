@@ -1,8 +1,8 @@
 const pg = require('pg');
 
 const config = {
-    user: "avnadmin",
-    password: "AVNS_K2enPwQsud-hpQxc8H1",
+    user: "mycruduser",
+    password: "ypassword",
     host: "pg-b6f2d0d-ashwinmridul-task-management.d.aivencloud.com",
     port: 28780,
     database: "defaultdb",
