@@ -1,7 +1,8 @@
 const pg = require('pg');
 
+// Store this securely
 const config = {
-    user: "mycruduser",
+    user: "mycruduser", // This user has only CRUD permissions on Users and Tasks tables
     password: "ypassword",
     host: "pg-b6f2d0d-ashwinmridul-task-management.d.aivencloud.com",
     port: 28780,
