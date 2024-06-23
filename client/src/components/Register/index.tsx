@@ -18,7 +18,7 @@ const Register: FC<EmptyProps> = React.memo(() => {
   const headerColor = useMemo(() => theme.palette.grey[800], [theme.palette.grey]);
 
   const navigate: NavigateFunction = useNavigate();
-  
+
   const {dispatchAlert} = useContext(AlertContext);
   const { register } = useContext(AuthContext);
 
@@ -72,6 +72,7 @@ const Register: FC<EmptyProps> = React.memo(() => {
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             fullWidth
+                            required
                         />
                     </Grid>
                     <Grid item xs={12} sm={6} md={6} lg={6} xl={6} className='grid-item'>
@@ -83,6 +84,7 @@ const Register: FC<EmptyProps> = React.memo(() => {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             fullWidth
+                            required
                         />
                     </Grid>
                     <Grid item xs={12} sm={6} md={6} lg={6} xl={6} className='grid-item'>
@@ -95,6 +97,7 @@ const Register: FC<EmptyProps> = React.memo(() => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             fullWidth
+                            required
                         />
                     </Grid>
                     <Grid item xs={12} sm={6} md={6} lg={6} xl={6} className='grid-item'>
@@ -107,6 +110,7 @@ const Register: FC<EmptyProps> = React.memo(() => {
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                             fullWidth
+                            required
                         />
                     </Grid>
                 </Grid>

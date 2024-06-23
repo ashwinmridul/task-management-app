@@ -58,6 +58,7 @@ const Login: FC<EmptyProps> = React.memo(() => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     fullWidth
+                    required
                 />
                 <br />
                 <TextField
@@ -69,6 +70,7 @@ const Login: FC<EmptyProps> = React.memo(() => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     fullWidth
+                    required
                 />
                 <br />
                 <Button type="submit" variant='contained'>Login</Button>

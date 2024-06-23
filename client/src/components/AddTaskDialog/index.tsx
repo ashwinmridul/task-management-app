@@ -38,17 +38,20 @@ const AddTaskDialog: React.FC<AddTaskProps> = ({onAdd, handleClose, open}) => {
             event.preventDefault();
             const formData = new FormData(event.currentTarget);
             const formJson = Object.fromEntries((formData as any).entries());
+            if (!formJson.title || !formJson.description || !formJson.dueDate) {
+              dispatchAlert({ severity: 'error', message: "Please fill all the fields" });
+              return;
+            }
             dispatchLoader(true);
             try {
               const response = await axios.post(`${API_URL}/tasks`, {...formJson, status: StatusTypes.todo}, {headers: {token}});
               onAdd(response.data.task);
               dispatchAlert({severity: 'success', message: response.data.message});
+              handleClose();
             } catch(err) {
               errorHandler(err as AxiosError, navigate, logout, dispatchAlert);
             }
             dispatchLoader(false);
-            
-            handleClose();
           },
         }}
       >
@@ -87,7 +90,7 @@ const AddTaskDialog: React.FC<AddTaskProps> = ({onAdd, handleClose, open}) => {
           />
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={['DatePicker']}>
-              <DatePicker name='dueDate' sx={{ width: "100%" }} label="Due Date" shouldDisableDate={(date) => date < dayjs()} format='YYYY-MM-DD' />
+              <DatePicker name='dueDate' sx={{ width: "100%" }} label="Due Date *" shouldDisableDate={(date) => date < dayjs()} format='YYYY-MM-DD' />
             </DemoContainer>
           </LocalizationProvider>
         </DialogContent>
